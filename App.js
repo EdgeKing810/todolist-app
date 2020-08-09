@@ -41,9 +41,9 @@ export default function App() {
                 <Header />
                 <Block style={styles.content}>
                     <AddTodo addTodoListener={addTodoListener} />
-                    <Block>
+                    <Block style={styles.list}>
                         <FlatList
-                            style={styles.list}
+                            style={{ paddingHorizontal: 8 }}
                             data={todos}
                             renderItem={({ item }) => (
                                 <TodoItem item={item} removeItem={removeItem} />
@@ -62,11 +62,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#555",
     },
     content: {
+        flex: 1,
         padding: 40,
     },
     list: {
-        height: 550,
-        paddingHorizontal: 8,
+        flex: 1,
         marginTop: 12,
     },
 });
