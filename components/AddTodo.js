@@ -2,16 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet,AsyncStorage } from "react-native";
 import { Input, Block, Button } from "galio-framework";
 
-_storeData = async () => {
-    try {
-      await AsyncStorage.setItem(
-        '@MySuperStore:key',
-        'I like to save it.'
-      );
-    } catch (error) {
-      // Error saving data
-    }
-  };
+
 const saveDataLocally=(data,number)=>{
     _storeData = async () => {
         try {
