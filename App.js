@@ -28,12 +28,23 @@ export default function App() {
     const addTodoListener = (text) => {
         if (text.length > 3) {
             setTodos((prev) => [...prev, { name: text, key: v1().toString() }]);
+            showTodos();  //if todo has been saved successfully, fetch/show all todos
         } else {
             Alert.alert("OOPS!", "ToDos must be over 3 chars long!", [
                 { text: "understood" },
             ]);
         }
     };
+
+    const showTodos=()=>{
+        <ul>
+            {
+                todos.forEach( todo=>
+                    <li key={todo.key}>{todo.name}</li> 
+                )
+            }
+        </ul>
+    }
 
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
