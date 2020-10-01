@@ -5,6 +5,7 @@ import {
     Alert,
     TouchableWithoutFeedback,
     Keyboard,
+    AsyncStorage,
 } from "react-native";
 import { Block } from "galio-framework";
 
@@ -25,9 +26,24 @@ export default function App() {
         setTodos((prev) => prev.filter((todo) => todo.key != key));
     };
 
+    const storeLocally=(key,text)=>{
+        _storeData = async () => {
+            try {
+              await AsyncStorage.setItem(
+                key,
+                text
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          };
+    }
+
     const addTodoListener = (text) => {
         if (text.length > 3) {
-            setTodos((prev) => [...prev, { name: text, key: v1().toString() }]);
+            let key=v1.toString();
+            setTodos((prev) => [...prev, { name: text, key: key }]);
+            storeLocally(key,text); //Save the todos in localstorage
             showTodos();  //if todo has been saved successfully, fetch/show all todos
         } else {
             Alert.alert("OOPS!", "ToDos must be over 3 chars long!", [
@@ -37,13 +53,17 @@ export default function App() {
     };
 
     const showTodos=()=>{
-        <ul>
-            {
-                todos.forEach( todo=>
-                    <li key={todo.key}>{todo.name}</li> 
-                )
+        todos.forEach(todo=>{
+            try{
+                const value=await AsyncStorage.getItem(todo.key);
+                if(value!=null){
+                    console.log(value);
+                }
             }
-        </ul>
+            catch(error){
+                console.log(error);
+            }
+        });
     }
 
     return (
