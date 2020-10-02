@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
     StyleSheet,
     FlatList,
@@ -26,45 +26,46 @@ export default function App() {
         setTodos((prev) => prev.filter((todo) => todo.key != key));
     };
 
-    const storeLocally=(key,text)=>{
+    const storeLocally=()=>{
         _storeData = async () => {
             try {
               await AsyncStorage.setItem(
-                key,
-                text
+                'localTodos',
+                JSON.stringify(todos)
               );
             } catch (error) {
               console.log(error);
             }
           };
     }
+    
+
+    useEffect(()=>{
+        try{
+            const value=await AsyncStorage.getItem('localTodos');
+            if(value!=null){
+                let parsedValues=JSON.parse(value);
+                parsedValues.forEach(parsedValue=>{
+                    console.log(`${parsedValue.key} : ${parsedValue.name}`);
+                });
+            }
+        }
+        catch(error){
+            console.log(error);
+        }
+    },[todos]);
 
     const addTodoListener = (text) => {
         if (text.length > 3) {
             let key=v1.toString();
             setTodos((prev) => [...prev, { name: text, key: key }]);
-            storeLocally(key,text); //Save the todos in localstorage
-            showTodos();  //if todo has been saved successfully, fetch/show all todos
+            storeLocally(); //Save the todos in localstorage
         } else {
             Alert.alert("OOPS!", "ToDos must be over 3 chars long!", [
                 { text: "understood" },
             ]);
         }
     };
-
-    const showTodos=()=>{
-        todos.forEach(todo=>{
-            try{
-                const value=await AsyncStorage.getItem(todo.key);
-                if(value!=null){
-                    console.log(value);
-                }
-            }
-            catch(error){
-                console.log(error);
-            }
-        });
-    }
 
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
