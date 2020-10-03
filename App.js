@@ -51,7 +51,7 @@ export default function App() {
         catch(error){
             console.log(error);
         }
-    },[todos]);
+    },[]);
 
     const addTodoListener = (text) => {
         if (text.length > 3) {
