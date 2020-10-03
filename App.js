@@ -45,9 +45,7 @@ export default function App() {
             const value=await AsyncStorage.getItem('localTodos');
             if(value!=null){
                 let parsedValues=JSON.parse(value);
-                parsedValues.forEach(parsedValue=>{
-                    console.log(`${parsedValue.key} : ${parsedValue.name}`);
-                });
+                setTodos(parsedValues);
             }
         }
         catch(error){
