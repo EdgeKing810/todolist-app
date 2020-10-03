@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
     StyleSheet,
     FlatList,
     Alert,
     TouchableWithoutFeedback,
     Keyboard,
+    AsyncStorage,
 } from "react-native";
 import { Block } from "galio-framework";
 
@@ -25,9 +26,38 @@ export default function App() {
         setTodos((prev) => prev.filter((todo) => todo.key != key));
     };
 
+    const storeLocally=()=>{
+        _storeData = async () => {
+            try {
+              await AsyncStorage.setItem(
+                'localTodos',
+                JSON.stringify(todos)
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          };
+    }
+    
+
+    useEffect(()=>{
+        try{
+            const value=await AsyncStorage.getItem('localTodos');
+            if(value!=null){
+                let parsedValues=JSON.parse(value);
+                setTodos(parsedValues);
+            }
+        }
+        catch(error){
+            console.log(error);
+        }
+    },[]);
+
     const addTodoListener = (text) => {
         if (text.length > 3) {
-            setTodos((prev) => [...prev, { name: text, key: v1().toString() }]);
+            let key=v1.toString();
+            setTodos((prev) => [...prev, { name: text, key: key }]);
+            storeLocally(); //Save the todos in localstorage
         } else {
             Alert.alert("OOPS!", "ToDos must be over 3 chars long!", [
                 { text: "understood" },
